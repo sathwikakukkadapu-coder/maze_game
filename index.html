@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Exit is a Coward | Indie Puzzle Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+
+        <!-- ================= MAIN MENU SCREEN ================= -->
+        <div id="screen-menu" class="screen">
+            <div class="menu-content">
+                <div class="menu-badge">HACKATHON EDITION</div>
+                <h1 class="game-title">
+                    <span class="title-exit">THE EXIT IS A</span><br>
+                    <span class="title-coward">COWARD</span>
+                </h1>
+                <p class="game-tagline">
+                    The exit door doesn't want you to leave. Whenever you approach, it flees! Outsmart, corner, and trap it.
+                </p>
+
+                <div class="menu-actions">
+                    <button id="btn-play-game" class="btn btn-primary">
+                        <span>▶ PLAY GAME</span>
+                    </button>
+                    <button id="btn-how-to-play" class="btn btn-secondary">
+                        <span>📖 HOW TO PLAY</span>
+                    </button>
+                    <button id="btn-level-select" class="btn btn-secondary">
+                        <span>🗺 LEVEL SELECT</span>
+                    </button>
+                    <button id="btn-sound-menu" class="btn btn-secondary">
+                        🔊 <span>SOUND: ON</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ACTIVE GAMEPLAY SCREEN ================= -->
+        <div id="screen-game" class="screen hidden">
+            <!-- Top HUD -->
+            <header class="game-hud">
+                <div class="hud-left">
+                    <button id="btn-menu-hud" class="btn btn-icon" title="Main Menu">🏠</button>
+                    <div class="hud-level-info">
+                        <div id="hud-level-title" class="hud-level-title">Level 1: The First Escape</div>
+                        <div class="hud-hint-pill">Herd the exit into a corner</div>
+                    </div>
+                </div>
+
+                <div class="hud-center">
+                    <div class="hud-stat-box">
+                        <span class="hud-stat-label">MOVES</span>
+                        <span id="hud-moves-count" class="hud-stat-value">0</span>
+                    </div>
+                    <div class="hud-stat-box">
+                        <span class="hud-stat-label">BEST</span>
+                        <span id="hud-best-moves" class="hud-stat-value">-</span>
+                    </div>
+                </div>
+
+                <div class="hud-right">
+                    <button id="btn-undo" class="btn btn-icon" title="Undo Move (Z / U)" disabled>↩</button>
+                    <button id="btn-restart" class="btn btn-icon" title="Restart Level (R)">🔄</button>
+                    <button id="btn-sound-hud" class="btn btn-icon" title="Toggle Sound (M)">🔊</button>
+                    <button id="btn-pause" class="btn btn-icon" title="Pause Game (P / Esc)">⏸</button>
+                </div>
+            </header>
+
+            <!-- Canvas Board Area -->
+            <main class="canvas-wrapper">
+                <canvas id="game-canvas"></canvas>
+            </main>
+
+            <!-- Bottom Bar & Controls -->
+            <footer class="game-bottom-bar">
+                <div class="hint-bar">
+                    <span class="hint-icon">💡</span>
+                    <span id="hud-hint-text">The exit is a coward! It flees from you. Chase it into the corner!</span>
+                </div>
+
+                <!-- Touch / Mobile D-Pad -->
+                <div class="dpad-container">
+                    <button id="dpad-up" class="dpad-btn">▲</button>
+                    <button id="dpad-left" class="dpad-btn">◀</button>
+                    <button id="dpad-right" class="dpad-btn">▶</button>
+                    <button id="dpad-down" class="dpad-btn">▼</button>
+                </div>
+            </footer>
+        </div>
+
+        <!-- ================= HOW TO PLAY MODAL ================= -->
+        <div id="modal-how-to-play" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 class="modal-title">HOW TO PLAY</h2>
+                <p class="modal-subtitle">Master the art of cornering a living coward</p>
+
+                <div class="how-to-steps">
+                    <div class="step-item">
+                        <div class="step-icon">🚪</div>
+                        <div class="step-text">
+                            <strong>The Living Exit</strong>
+                            <p>Every time you take a step, the door moves to maximize its distance from you. It never walks into you or through walls!</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-icon">🧠</div>
+                        <div class="step-text">
+                            <strong>Trap, Don't Chase</strong>
+                            <p>Blindly chasing will cause it to run in circles. Use walls, columns, and corners to leave it with zero escape routes.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-icon">🏆</div>
+                        <div class="step-text">
+                            <strong>Catch The Door</strong>
+                            <p>When the exit is trapped, step into its tile to complete the level!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls-summary">
+                    <span>Move: <span class="key-badge">WASD</span> / <span class="key-badge">Arrows</span></span>
+                    <span>Restart: <span class="key-badge">R</span></span>
+                    <span>Undo: <span class="key-badge">Z</span></span>
+                </div>
+
+                <button id="btn-close-how-to" class="btn btn-primary" style="width: 100%;">
+                    GOT IT, LET'S PLAY!
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= PAUSE MODAL ================= -->
+        <div id="modal-pause" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 class="modal-title">GAME PAUSED</h2>
+                <p class="modal-subtitle">Take a breather, the coward isn't going anywhere</p>
+
+                <div class="modal-actions">
+                    <button id="btn-pause-resume" class="btn btn-primary">RESUME</button>
+                    <button id="btn-pause-restart" class="btn btn-secondary">RESTART LEVEL</button>
+                    <button id="btn-pause-level-select" class="btn btn-secondary">LEVEL SELECT</button>
+                    <button id="btn-pause-menu" class="btn btn-secondary">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= LEVEL CLEAR MODAL ================= -->
+        <div id="modal-level-clear" class="modal-overlay hidden">
+            <div class="modal-card">
+                <h2 id="clear-level-title" class="modal-title">Level Complete!</h2>
+                <p class="modal-subtitle">You cornered the coward!</p>
+
+                <div id="clear-stars" class="stars-display">★★★</div>
+
+                <div class="clear-stats-row">
+                    <div class="stat-item">
+                        <span class="stat-label">MOVES TAKEN</span>
+                        <span id="clear-moves-count" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">BEST MOVES</span>
+                        <span id="clear-best-moves" class="stat-value">0</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="btn-next-level" class="btn btn-primary">NEXT LEVEL ➔</button>
+                    <button id="btn-replay-level" class="btn btn-secondary">REPLAY LEVEL</button>
+                    <button id="btn-clear-level-select" class="btn btn-secondary">LEVEL SELECT</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= FINAL VICTORY MODAL ================= -->
+        <div id="modal-victory" class="modal-overlay hidden">
+            <div class="modal-card">
+                <div class="menu-badge">CHAMPION OF ESCAPES</div>
+                <h2 class="modal-title" style="color: var(--accent-gold);">VICTORY!</h2>
+                <p id="victory-subtitle" class="modal-subtitle">All 10 Coward Doors have been captured!</p>
+
+                <div class="stars-display">★★★★★</div>
+
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+                    The exits thought they were clever, but your tactical foresight outmaneuvered every single escape attempt.
+                </p>
+
+                <div class="clear-stats-row">
+                    <div class="stat-item">
+                        <span class="stat-label">TOTAL BEST MOVES</span>
+                        <span id="victory-total-moves" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">LEVELS MASTERED</span>
+                        <span id="victory-levels-count" class="stat-value">10 / 10</span>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="btn-victory-replay" class="btn btn-accent">PLAY AGAIN ↺</button>
+                    <button id="btn-victory-menu" class="btn btn-secondary">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= LEVEL SELECT MODAL ================= -->
+        <div id="modal-level-select" class="modal-overlay hidden">
+            <div class="modal-card" style="max-width: 540px;">
+                <h2 class="modal-title">SELECT LEVEL</h2>
+                <p class="modal-subtitle">Replay any unlocked level to beat your personal best</p>
+
+                <div id="level-select-grid" class="level-select-grid">
+                    <!-- Populated dynamically by game.js -->
+                </div>
+
+                <button id="btn-close-level-select" class="btn btn-secondary" style="width: 100%;">
+                    CLOSE
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/levels.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/renderer.js"></script>
+    <script src="js/engine.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
